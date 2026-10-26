@@ -1,0 +1,30 @@
+# The platform's shared pipeline (DEVOPS-CANARY/golden-path): gates on every
+# PR; build, scan and deploy to UAT on develop; hotfixes to staging; promotion
+# to staging and prod with the same images. Rules and docs live there.
+name: Pipeline
+
+on:
+  pull_request:
+    branches: [develop, staging, main]
+  push:
+    branches: [develop, staging, "hotfix/**"]
+  workflow_dispatch: # on main: release to production
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pipeline-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }} # superseded PR runs stop; deploys always finish
+
+jobs:
+  pipeline:
+    uses: DEVOPS-CANARY/golden-path/.github/workflows/pipeline.yml@v1
+    permissions:
+      contents: read
+      packages: write # push images to GHCR
+    with:
+      app: test-app
+      components: '["backend"]'
+    secrets:
+      GITOPS_DEPLOY_KEY: ${{ secrets.GITOPS_DEPLOY_KEY }}

@@ -1,0 +1,8 @@
+# hadolint config, read by the pipeline's Dockerfile lint gate.
+failure-threshold: warning
+
+ignored:
+  # Pin apk package versions: Alpine deletes old package versions from its
+  # mirrors, so exact pins break rebuilds. Reproducibility comes from pinning
+  # the base image by digest instead; Trivy scans what actually got installed.
+  - DL3018
