@@ -1,7 +1,0 @@
-name: Test C minimal
-description: Minimal form
-body:
-  - type: input
-    id: x
-    attributes:
-      label: X
