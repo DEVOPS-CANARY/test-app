@@ -1,0 +1,93 @@
+name: D4 no field descriptions
+description: Put an app on the platform's golden path. Once approved, the PRs are opened for you.
+title: "Onboard: <app name>"
+labels: [onboarding]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill this in for the app you want on the platform. When the platform team adds the
+        **approved** label, a workflow renders the templates and opens two pull requests: one
+        in the app's repository (pipeline caller, Dockerfiles) and one in GitOps-Repo (the
+        app's UAT environment). Add the **preview** label first to see what would be generated.
+        Names and values here are reviewed by people; nothing runs until the PRs are merged.
+  - type: input
+    id: app
+    attributes:
+      label: App name
+      placeholder: logistics
+    validations:
+      required: true
+  - type: input
+    id: repository
+    attributes:
+      label: GitHub repository
+      placeholder: DEVOPS-CANARY/smart-logistics-app
+    validations:
+      required: true
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Backend
+      options: [nestjs, none]
+    validations:
+      required: true
+  - type: input
+    id: backend_port
+    attributes:
+      label: Backend port
+      value: "3001"
+  - type: dropdown
+    id: backend_orm
+    attributes:
+      label: Backend database layer
+      options: [prisma, typeorm, none]
+  - type: dropdown
+    id: frontend
+    attributes:
+      label: Frontend
+      options: [nextjs, none]
+    validations:
+      required: true
+  - type: input
+    id: worker
+    attributes:
+      label: Background worker (name)
+      placeholder: notifications
+  - type: input
+    id: worker_command
+    attributes:
+      label: Worker command
+      value: node dist/worker.js
+  - type: dropdown
+    id: package_manager
+    attributes:
+      label: Package manager
+      options: [npm, yarn]
+    validations:
+      required: true
+  - type: checkboxes
+    id: needs
+    attributes:
+      label: The app needs
+      options:
+        - label: PostgreSQL
+        - label: Redis
+        - label: Kafka
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+    validations:
+      required: true
+  - type: checkboxes
+    id: readiness
+    attributes:
+      label: Readiness (platform plan §11)
+      options:
+        - label: Health endpoints for liveness and readiness (A3)
+        - label: All configuration from environment variables; optional variables really optional (A5)
+        - label: "Stateless across replicas: no in-memory sessions, rate limits or socket rooms (A7)"
+        - label: Migrations runnable from the built image with plain `node` (A9, A14)
+        - label: No environment-specific `NEXT_PUBLIC_*` values (A2, A17)
+        - label: Secrets inventory complete, with an owner per value (A18)
